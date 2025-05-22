@@ -1,9 +1,10 @@
 // types.ts
 export interface Mentor {
-    name: string;
-    initials: string;
-    college: string;
-    branch: string;
-    year: string;
-    imageUrl?: string;
+    name      :string
+    email     :string  
+    bio       :string
+    image     :string
+    oneLiner  :string
+    upiId     :string
+    tags      :string[] 
 }

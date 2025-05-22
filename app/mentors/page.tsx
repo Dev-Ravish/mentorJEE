@@ -5,7 +5,7 @@ import ProfileCard from '@/components/profileCard';
 
 export default function MentorsPage() {
     return (
-        <div className="min-h-screen px-6 py-10 bg-gray-50">
+        <div className="h-full px-6 py-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">
             <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
             Meet Our Mentors

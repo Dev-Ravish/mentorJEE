@@ -1,4 +1,5 @@
 'use client'
+import { SignedIn, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import React, { useState } from 'react';
 
@@ -27,6 +28,9 @@ export default function Navbar() {
                             {link.name}
                         </a>
                     ))}
+                     <SignedIn>
+                            <UserButton/>
+                        </SignedIn>
                 </div>
                 <button
                     className="md:hidden flex flex-col justify-center items-center w-8 h-8"
@@ -52,7 +56,11 @@ export default function Navbar() {
                                 {link.name}
                             </a>
                         ))}
+                         <SignedIn>
+                            <UserButton/>
+                        </SignedIn>
                     </div>
+                   
                 </div>
             )}
         </nav>

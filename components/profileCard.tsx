@@ -1,70 +1,83 @@
-// components/ProfileCard.tsx
-import React from 'react';
-import { Mentor } from '@/types';
-import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogTrigger,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-} from '@/components/ui/dialog';
-import Image from 'next/image';
+'use client';
 
-interface ProfileCardProps {
-    mentor: Mentor;
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+
+export interface Mentor {
+  name?: string;
+  email?: string;
+  bio?: string;
+  image?: string;
+  oneLiner?: string;
+  upiId?: string;
+  tags: string[];
 }
 
-const ProfileCard = ({ mentor }: ProfileCardProps) => {
-    const { name, initials, college, branch, year, imageUrl } = mentor;
+interface ProfileCardProps {
+  mentor: Mentor;
+}
 
-    return (
-        <div className="bg-white rounded-xl shadow-md p-5 hover:shadow-lg transition">
-        <div className="flex items-center gap-4">
-            {imageUrl ? (
-            <Image
-                src={imageUrl}
-                alt={name}
-                className="w-14 h-14 rounded-full object-cover"
+export default function ProfileCard({ mentor }: ProfileCardProps) {
+  return (
+    <Card className="w-full max-w-sm rounded-2xl bg-[#F3F4FF] border border-[#CBD1FF] shadow-md">
+      <CardContent className="flex flex-col items-center p-6 text-center">
+        <div className="relative w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-[#2F2D9E]">
+         {mentor.image ? (
+            <img
+                src={mentor.image}
+                alt='Mentor Image'
+                className="w-24 h-24 rounded-full object-cover"
             />
             ) : (
-            <div className="w-14 h-14 bg-[#E6ECFF] text-[#2F2D9E] flex items-center justify-center rounded-full text-lg font-bold">
-                {initials}
+            <div className="w-24 h-24 bg-[#E6ECFF] text-[#2F2D9E] flex items-center justify-center rounded-full text-lg font-bold">
+                RK
             </div>
             )}
-            <div>
-            <h2 className="text-lg font-semibold text-[#2F2D9E]">{name}</h2>
-            <p className="text-sm text-gray-600">{branch} - {college}</p>
-            <p className="text-xs text-gray-500">{year}</p>
-            </div>
+        </div>
+        <h3 className="text-lg font-semibold text-[#2F2D9E]">{mentor.name}</h3>
+        <p className="text-sm text-muted-foreground mb-2">{mentor.oneLiner}</p>
+
+        <div className="flex flex-wrap justify-center gap-2 my-2">
+          {mentor.tags.map((tag, index) => (
+            <span
+              key={index}
+              className="bg-[#CBD1FF] text-[#2F2D9E] px-3 py-1 rounded-full text-xs"
+            >
+              {tag}
+            </span>
+          ))}
         </div>
 
-        <div className="mt-4 flex gap-2">
-            <Button className="bg-[#2F2D9E] hover:bg-[#3f3dc4] text-white flex-1 text-sm">
-            Book a Call
-            </Button>
-            <Dialog >
+        <div className="flex gap-2 mt-4">
+          <Button className="bg-[#2F2D9E] hover:bg-[#3f3dc4] text-white">Book a Call</Button>
+
+          <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline" className="border-[#2F2D9E] text-[#2F2D9E] text-sm flex-1">
-                View More
-                </Button>
+              <Button variant="outline">More Info</Button>
             </DialogTrigger>
-            <DialogContent className="md:max-w-md ">
-                <DialogHeader>
-                <DialogTitle>{name}</DialogTitle>
-                <DialogDescription className="text-sm text-gray-600">
-                    {branch}, {college} — {year}
-                </DialogDescription>
-                </DialogHeader>
-                <div className="mt-4 text-sm text-gray-700">
-                This mentor has guided over 200 students and has a rating of 4.9/5. You can ask about academics, campus life, and preparation strategies.
+            <DialogContent className="md:max-w-md">
+              <DialogHeader>
+                <DialogTitle>{mentor.name}</DialogTitle>
+                <DialogDescription>{mentor.oneLiner}</DialogDescription>
+              </DialogHeader>
+              <div className="mt-2 space-y-2">
+                <p className="text-sm text-muted-foreground">{mentor.bio || 'No bio provided.'}</p>
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {mentor.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="bg-[#CBD1FF] text-[#2F2D9E] px-3 py-1 rounded-full text-xs"
+                    >
+                      {tag}
+                    </span>
+                  ))}
                 </div>
+              </div>
             </DialogContent>
-            </Dialog>
+          </Dialog>
         </div>
-        </div>
-    );
-};
-
-export default ProfileCard;
+      </CardContent>
+    </Card>
+  );
+}
