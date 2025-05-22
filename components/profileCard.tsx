@@ -1,8 +1,15 @@
-'use client';
+"use client";
 
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export interface Mentor {
   name?: string;
@@ -23,17 +30,17 @@ export default function ProfileCard({ mentor }: ProfileCardProps) {
     <Card className="w-full max-w-sm rounded-2xl bg-[#F3F4FF] border border-[#CBD1FF] shadow-md">
       <CardContent className="flex flex-col items-center p-6 text-center">
         <div className="relative w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-[#2F2D9E]">
-         {mentor.image ? (
+          {mentor.image ? (
             <img
-                src={mentor.image}
-                alt='Mentor Image'
-                className="w-24 h-24 rounded-full object-cover"
+              src={mentor.image}
+              alt="Mentor Image"
+              className="w-24 h-24 rounded-full object-cover"
             />
-            ) : (
+          ) : (
             <div className="w-24 h-24 bg-[#E6ECFF] text-[#2F2D9E] flex items-center justify-center rounded-full text-lg font-bold">
-                RK
+              RK
             </div>
-            )}
+          )}
         </div>
         <h3 className="text-lg font-semibold text-[#2F2D9E]">{mentor.name}</h3>
         <p className="text-sm text-muted-foreground mb-2">{mentor.oneLiner}</p>
@@ -50,7 +57,9 @@ export default function ProfileCard({ mentor }: ProfileCardProps) {
         </div>
 
         <div className="flex gap-2 mt-4">
-          <Button className="bg-[#2F2D9E] hover:bg-[#3f3dc4] text-white">Book a Call</Button>
+          <Button className="bg-[#2F2D9E] hover:bg-[#3f3dc4] text-white">
+            Book a Call
+          </Button>
 
           <Dialog>
             <DialogTrigger asChild>
@@ -62,7 +71,9 @@ export default function ProfileCard({ mentor }: ProfileCardProps) {
                 <DialogDescription>{mentor.oneLiner}</DialogDescription>
               </DialogHeader>
               <div className="mt-2 space-y-2">
-                <p className="text-sm text-muted-foreground">{mentor.bio || 'No bio provided.'}</p>
+                <p className="text-sm text-muted-foreground">
+                  {mentor.bio || "No bio provided."}
+                </p>
                 <div className="flex flex-wrap gap-2 pt-2">
                   {mentor.tags.map((tag, index) => (
                     <span
