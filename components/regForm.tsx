@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useUser } from "@clerk/nextjs";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { CldUploadWidget } from "next-cloudinary";
 
 interface MentorData {
   clerkId: string;
@@ -30,8 +31,18 @@ export default function MentorRegistrationForm() {
     tags: [],
   });
   const { user } = useUser();
-
   const [tagInput, setTagInput] = useState("");
+
+  // Auto-fill email and clerkId once user is loaded
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        email: user.emailAddresses[0]?.emailAddress || "",
+        clerkId: user.id,
+      }));
+    }
+  }, [user]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -59,33 +70,34 @@ export default function MentorRegistrationForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (
-      !formData.name ||
-      !formData.email ||
-      !formData.bio ||
-      !formData.image ||
-      !formData.oneLiner ||
-      !formData.upiId
-    ) {
-      console.error("All fields are required");
-      return;
+
+    const requiredFields = [
+      "name",
+      "email",
+      "bio",
+      "image",
+      "oneLiner",
+      "upiId",
+    ];
+
+    for (const field of requiredFields) {
+      if (!formData[field as keyof MentorData]) {
+        console.error(`Missing field: ${field}`);
+        return;
+      }
     }
-    const clerkId = user?.id || "";
-    const email = user?.emailAddresses[0]?.emailAddress || "";
-    if (!clerkId || !email) {
+
+    if (!user?.id || !user?.emailAddresses[0]?.emailAddress) {
       console.error("Clerk ID or email is missing");
       return;
     }
 
-    if (formData.email !== email) {
+    if (formData.email !== user.emailAddresses[0]?.emailAddress) {
       console.error("Email mismatch");
       return;
     }
 
-    formData.clerkId = clerkId;
-
     console.log("Submitting:", formData);
-    // TODO: Submit to backend API
     const response = await fetch("/api/mentorRegister", {
       method: "POST",
       headers: {
@@ -93,6 +105,7 @@ export default function MentorRegistrationForm() {
       },
       body: JSON.stringify(formData),
     });
+
     if (response.ok) {
       const data = await response.json();
       console.log("Success:", data);
@@ -109,12 +122,9 @@ export default function MentorRegistrationForm() {
       setTagInput("");
       alert("Mentor registered successfully!");
       window.location.replace("/");
-      // Handle success (e.g., show a success message, redirect, etc.)
     } else {
       console.error("Error:", response.statusText);
-      // Handle error (e.g., show an error message)
     }
-    // Reset form after submission
   };
 
   return (
@@ -140,7 +150,7 @@ export default function MentorRegistrationForm() {
           name="email"
           type="email"
           value={formData.email}
-          onChange={handleInputChange}
+          readOnly
           required
         />
       </div>
@@ -167,13 +177,47 @@ export default function MentorRegistrationForm() {
       </div>
 
       <div>
-        <Label>Image URL</Label>
-        <Input
-          name="image"
-          value={formData.image}
-          onChange={handleInputChange}
-          required
-        />
+        <Label>Image</Label>
+        <CldUploadWidget
+          signatureEndpoint="/api/signCloudinaryParams"
+          onSuccess={(result) => {
+            let imageUrl = "";
+            if (
+              result.info &&
+              typeof result.info !== "string" &&
+              "secure_url" in result.info
+            ) {
+              imageUrl = result.info.secure_url as string;
+            }
+            setFormData((prev) => ({
+              ...prev,
+              image: imageUrl,
+            }));
+          }}
+          onQueuesEnd={(_, { widget }) => {
+            widget.close();
+          }}
+        >
+          {({ open }) => {
+            const handleOnClick = () => open();
+            return (
+              <button type="button" onClick={handleOnClick}>
+                Upload an Image
+              </button>
+            );
+          }}
+        </CldUploadWidget>
+
+        {formData.image && (
+          <div className="mt-2">
+            <img
+              src={formData.image}
+              alt="Mentor"
+              
+              className="w-32 h-32 object-cover rounded-full"
+            />
+          </div>
+        )}
       </div>
 
       <div>
@@ -186,7 +230,6 @@ export default function MentorRegistrationForm() {
         />
       </div>
 
-      {/* Tags Field */}
       <div>
         <Label>PoRs / Tags</Label>
         <div className="flex gap-2 mb-2">
@@ -194,9 +237,12 @@ export default function MentorRegistrationForm() {
             placeholder="Add tag (e.g., E-Cell, Cfi, Nocode Club)"
             value={tagInput}
             onChange={(e) => setTagInput(e.target.value)}
-            onKeyDown={(e) =>
-              e.key === "Enter" && (e.preventDefault(), handleAddTag())
-            }
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleAddTag();
+              }
+            }}
           />
           <Button type="button" onClick={handleAddTag}>
             Add
