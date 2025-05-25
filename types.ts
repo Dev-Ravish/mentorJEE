@@ -7,4 +7,6 @@ export interface Mentor {
     oneLiner  :string
     upiId     :string
     tags      :string[] 
+    college   :string
+    department    :string
 }

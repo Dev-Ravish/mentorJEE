@@ -5,7 +5,7 @@ import { useState } from "react";
 
 const navLinks = [
   { name: "Home", href: "/" },
-  { name: "Mentors", href: "/mentors" },
+  { name: "Seniors", href: "/mentors" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -17,7 +17,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <div className="text-xl font-bold text-gray-800">
           {" "}
-          <Link href="/">MentorJee</Link>
+          <Link href="/">Wattzy</Link>
         </div>
         <div className="hidden md:flex space-x-6">
           {navLinks.map((link) => (

@@ -4,9 +4,9 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, email, bio, image, oneLiner, upiId, tags, clerkId } = body;
+    const { name, email, bio, image, oneLiner, upiId, tags, clerkId, college, department, calendlyUrl } = body;
 
-    if (!name || !email || !bio || !image || !oneLiner || !upiId || !tags || !clerkId) {
+    if (!name || !email || !bio || !image || !oneLiner || !upiId || !tags || !clerkId || !college || !department || !calendlyUrl) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
     }
 
@@ -20,6 +20,9 @@ export async function POST(req: Request) {
         upiId,
         clerkId,
         tags, 
+        college,
+        department, 
+        calendlyUrl,
       },
     });
 

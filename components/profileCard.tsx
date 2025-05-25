@@ -19,6 +19,9 @@ export interface Mentor {
   oneLiner?: string;
   upiId?: string;
   tags: string[];
+  college?: string;
+  department?: string;
+
 }
 
 interface ProfileCardProps {
@@ -43,6 +46,8 @@ export default function ProfileCard({ mentor }: ProfileCardProps) {
           )}
         </div>
         <h3 className="text-lg font-semibold text-[#2F2D9E]">{mentor.name}</h3>
+        <p className="text-sm text-gray-800 mb-2">{mentor.department}, {mentor.college}</p>
+        
         <p className="text-sm text-muted-foreground mb-2">{mentor.oneLiner}</p>
 
         <div className="flex flex-wrap justify-center gap-2 my-2">

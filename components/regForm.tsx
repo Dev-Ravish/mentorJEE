@@ -17,6 +17,9 @@ interface MentorData {
   oneLiner: string;
   upiId: string;
   tags: string[];
+  college: string;
+  department: string;
+  calendlyUrl?: string; 
 }
 
 export default function MentorRegistrationForm() {
@@ -29,6 +32,9 @@ export default function MentorRegistrationForm() {
     oneLiner: "",
     upiId: "",
     tags: [],
+    college: "",
+    department: "",
+    calendlyUrl: "", 
   });
   const { user } = useUser();
   const [tagInput, setTagInput] = useState("");
@@ -78,6 +84,9 @@ export default function MentorRegistrationForm() {
       "image",
       "oneLiner",
       "upiId",
+      "college",
+      "department",
+      "calendlyUrl", 
     ];
 
     for (const field of requiredFields) {
@@ -118,6 +127,9 @@ export default function MentorRegistrationForm() {
         oneLiner: "",
         upiId: "",
         tags: [],
+        college: "",
+        department: "",
+        calendlyUrl: "", 
       });
       setTagInput("");
       alert("Mentor registered successfully!");
@@ -164,7 +176,24 @@ export default function MentorRegistrationForm() {
           required
         />
       </div>
-
+      <div>
+        <Label>College</Label>
+        <Input
+          name="college"
+          value={formData.college}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
+      <div>
+        <Label>Department</Label>
+        <Input
+          name="department"
+          value={formData.department}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
       <div>
         <Label>Bio</Label>
         <Textarea
@@ -229,7 +258,15 @@ export default function MentorRegistrationForm() {
           required
         />
       </div>
-
+      <div>
+        <Label>Calendly URL (for slot booking)</Label>
+        <Input
+          name="calendlyUrl"
+          value={formData.calendlyUrl}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
       <div>
         <Label>PoRs / Tags</Label>
         <div className="flex gap-2 mb-2">
